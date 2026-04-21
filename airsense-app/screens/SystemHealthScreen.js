@@ -59,7 +59,7 @@ export default function SystemHealthScreen({ navigation }) {
       </View>
 
       {/* Sensor Status */}
-      <SectionHeader title="Sensors" actionTitle="Insights >" onActionPress={() => navigation.navigate('SmartInsights')} />
+      <SectionHeader title="Sensors" actionTitle="Analytics >" onActionPress={() => navigation.navigate('Analytics')} />
       <View style={styles.card}>
         {data.sensors.map((sensor) => (
           <View key={sensor.id}>

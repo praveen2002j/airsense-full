@@ -8,6 +8,8 @@ import { theme } from '../styles/theme';
 import HomeScreen from '../screens/HomeScreen';
 import SystemHealthScreen from '../screens/SystemHealthScreen';
 import SmartInsightsScreen from '../screens/SmartInsightsScreen';
+import AnalyticsScreen from '../screens/AnalyticsScreen';
+import MLAnalyticsScreen from '../screens/MLAnalyticsScreen';
 import AlertsScreen from '../screens/AlertsScreen';
 import NotificationsScreen from '../screens/NotificationsScreen';
 import AlertHistoryScreen from '../screens/AlertHistoryScreen';
@@ -34,6 +36,8 @@ function AnalyticsStack() {
       headerShadowVisible: false,
     }}>
       <Stack.Screen name="SystemHealth" component={SystemHealthScreen} options={{ title: 'System Health' }} />
+      <Stack.Screen name="Analytics" component={AnalyticsScreen} options={{ title: 'Data Analytics' }} />
+      <Stack.Screen name="MLAnalytics" component={MLAnalyticsScreen} options={{ title: 'ML Analytics' }} />
       <Stack.Screen name="SmartInsights" component={SmartInsightsScreen} options={{ title: 'AI Insights' }} />
     </Stack.Navigator>
   );

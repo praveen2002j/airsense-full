@@ -12,6 +12,7 @@ app.use(express.json());
 app.use('/api/readings', require('./routes/readings'));
 app.use('/api/alerts', require('./routes/alerts'));
 app.use('/api/health', require('./routes/health'));
+app.use('/api/analytics', require('./routes/analytics'));
 
 app.get('/', (req, res) => res.json({ status: 'AirSense Backend running' }));
 

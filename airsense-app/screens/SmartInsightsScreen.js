@@ -11,7 +11,7 @@ export default function SmartInsightsScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      
+
       <SectionHeader title="Ventilation Control" />
       <View style={styles.controlCard}>
         <View style={styles.controlInfo}>
