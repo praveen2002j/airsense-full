@@ -76,12 +76,12 @@ export default function BottomTabs() {
 
           if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === 'Analytics') {
-            iconName = focused ? 'pie-chart' : 'pie-chart-outline';
+          } else if (route.name === 'System Health') {
+            iconName = focused ? 'pulse' : 'pulse-outline';
           } else if (route.name === 'Alerts') {
             iconName = focused ? 'warning' : 'warning-outline';
-          } else if (route.name === 'Settings') {
-            iconName = focused ? 'settings' : 'settings-outline';
+          } else if (route.name === 'Analytics') {
+            iconName = focused ? 'bar-chart' : 'bar-chart-outline';
           }
 
           return <Icon name={iconName} size={size} color={color} />;
@@ -89,9 +89,9 @@ export default function BottomTabs() {
       })}
     >
       <Tab.Screen name="Home" component={HomeStack} />
-      <Tab.Screen name="Analytics" component={AnalyticsStack} />
+      <Tab.Screen name="System Health" component={AnalyticsStack} />
       <Tab.Screen name="Alerts" component={AlertsStack} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Screen name="Analytics" component={AnalyticsScreen} />
     </Tab.Navigator>
   );
 }
