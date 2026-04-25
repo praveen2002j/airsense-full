@@ -1,9 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
+import { View, StyleSheet } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import BottomTabs from './navigation/BottomTabs';
 import { theme } from './styles/theme';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import ChatBot from './components/ChatBot';
+
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+});
 
 export default function App() {
   const customTheme = {
@@ -24,7 +30,10 @@ export default function App() {
     <SafeAreaProvider>
       <NavigationContainer theme={customTheme}>
         <StatusBar style="light" />
-        <BottomTabs />
+        <View style={styles.container}>
+          <BottomTabs />
+          <ChatBot />
+        </View>
       </NavigationContainer>
     </SafeAreaProvider>
   );

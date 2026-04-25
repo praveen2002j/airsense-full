@@ -68,6 +68,11 @@ export const getMLMeta = async () => {
   return data;
 };
 
+export const sendChatMessage = async (message, history = []) => {
+  const { data } = await client.post('/chat', { message, history });
+  return data;
+};
+
 export const getInsights = () => {
   return [
     { id: 1, title: 'CO\u2082 Rising Trend', description: 'CO\u2082 levels have increased by 15% in the last hour.', trend: 'up', type: 'info' },
