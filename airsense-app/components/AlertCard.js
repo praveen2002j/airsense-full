@@ -1,8 +1,10 @@
+// AlertCard component displays a single air quality alert with severity, icon, and value
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { theme } from '../styles/theme';
 import Icon from '@expo/vector-icons/Ionicons';
 import Badge from './Badge';
+
 
 export default function AlertCard({ alert }) {
   const { title, room, time, severity, value, iconName } = alert;
