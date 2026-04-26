@@ -1,22 +1,26 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import BottomTabs from './navigation/BottomTabs';
-import { theme } from './styles/theme';
+import { AppThemeProvider, useAppTheme } from './styles/theme';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import ChatBot from './components/ChatBot';
 
-const styles = StyleSheet.create({
-  container: { flex: 1 },
-});
-
-export default function App() {
+function AppShell() {
+  const { theme, isDark } = useAppTheme();
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+  });
+  const baseTheme = isDark ? DarkTheme : DefaultTheme;
   const customTheme = {
-    ...DefaultTheme,
-    dark: true,
+    ...baseTheme,
+    dark: isDark,
     colors: {
-      ...DefaultTheme.colors,
+      ...baseTheme.colors,
       primary: theme.colors.blue,
       background: theme.colors.background,
       card: theme.colors.card,
@@ -27,14 +31,22 @@ export default function App() {
   };
 
   return (
+    <NavigationContainer theme={customTheme}>
+      <StatusBar style={isDark ? 'light' : 'dark'} />
+      <View style={styles.container}>
+        <BottomTabs />
+        <ChatBot />
+      </View>
+    </NavigationContainer>
+  );
+}
+
+export default function App() {
+  return (
     <SafeAreaProvider>
-      <NavigationContainer theme={customTheme}>
-        <StatusBar style="light" />
-        <View style={styles.container}>
-          <BottomTabs />
-          <ChatBot />
-        </View>
-      </NavigationContainer>
+      <AppThemeProvider>
+        <AppShell />
+      </AppThemeProvider>
     </SafeAreaProvider>
   );
 }

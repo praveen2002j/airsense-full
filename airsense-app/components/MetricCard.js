@@ -1,71 +1,80 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { theme } from '../styles/theme';
+import { useAppTheme } from '../styles/theme';
 import Icon from '@expo/vector-icons/Ionicons';
+import CardAccent from './CardAccent';
 
-export default function MetricCard({ title, value, unit, iconName, color = theme.colors.blue }) {
+export default function MetricCard({ title, value, unit, iconName, color }) {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+  const tone = color || theme.colors.blue;
+
   return (
     <View style={styles.card}>
-      <View style={styles.header}>
-        <View style={[styles.iconContainer, { backgroundColor: color + '20' }]}>
-          <Icon name={iconName} size={18} color={color} />
+      <CardAccent color={tone} radius={theme.borderRadius.lg} />
+      <View style={styles.topRow}>
+        <View style={[styles.iconContainer, { backgroundColor: tone + '1F' }]}>
+          <Icon name={iconName} size={18} color={tone} />
         </View>
         <Text style={styles.title} numberOfLines={1}>{title}</Text>
       </View>
       <View style={styles.valueContainer}>
-        <Text style={styles.value}>{value}</Text>
+        <Text style={styles.value}>{value ?? '—'}</Text>
         <Text style={styles.unit}>{unit}</Text>
       </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   card: {
     backgroundColor: theme.colors.card,
     borderRadius: theme.borderRadius.lg,
     padding: theme.spacing.md,
+    paddingLeft: theme.spacing.md + 6,
     flex: 1,
     marginHorizontal: theme.spacing.xs,
     marginBottom: theme.spacing.sm,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: theme.colors.divider,
+    overflow: 'hidden',
+    ...theme.shadows.soft,
   },
-  header: {
+  topRow: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
     marginBottom: theme.spacing.md,
   },
   iconContainer: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: theme.spacing.sm,
   },
   title: {
-    fontSize: 14,
+    fontSize: 13,
     color: theme.colors.textSecondary,
-    fontWeight: '600',
+    fontWeight: '700',
     flex: 1,
+    marginLeft: theme.spacing.sm,
+    lineHeight: 18,
   },
   valueContainer: {
     flexDirection: 'row',
     alignItems: 'baseline',
+    paddingRight: theme.spacing.md,
   },
   value: {
-    fontSize: 24,
-    fontWeight: '700',
+    fontSize: 28,
+    fontWeight: '800',
     color: theme.colors.textPrimary,
   },
   unit: {
-    fontSize: 14,
-    color: theme.colors.textSecondary,
-    marginLeft: 4,
-    fontWeight: '500',
+    fontSize: 13,
+    color: theme.colors.textMuted,
+    marginLeft: 6,
+    fontWeight: '700',
   },
 });
