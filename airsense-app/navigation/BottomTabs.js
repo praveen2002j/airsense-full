@@ -32,9 +32,8 @@ function HomeStack() {
   );
 }
 
-function AnalyticsStack() {
-  const { theme } = useAppTheme();
-  const stackScreenOptions = {
+function createStackOptions(theme) {
+  return {
     headerStyle: { backgroundColor: theme.colors.backgroundAlt },
     headerTintColor: theme.colors.textPrimary,
     headerTitleStyle: { fontWeight: '800', fontSize: 17 },
@@ -44,6 +43,11 @@ function AnalyticsStack() {
     contentStyle: { backgroundColor: theme.colors.background },
     animation: 'none',
   };
+}
+
+function SystemHealthStack() {
+  const { theme } = useAppTheme();
+  const stackScreenOptions = createStackOptions(theme);
   return (
     <Stack.Navigator screenOptions={stackScreenOptions}>
       <Stack.Screen name="SystemHealth" component={SystemHealthScreen} options={{ title: 'System Health' }} />
@@ -54,18 +58,21 @@ function AnalyticsStack() {
   );
 }
 
+function AnalyticsStack() {
+  const { theme } = useAppTheme();
+  const stackScreenOptions = createStackOptions(theme);
+  return (
+    <Stack.Navigator screenOptions={stackScreenOptions}>
+      <Stack.Screen name="Analytics" component={AnalyticsScreen} options={{ title: 'Data Analytics' }} />
+      <Stack.Screen name="MLAnalytics" component={MLAnalyticsScreen} options={{ title: 'ML Analytics' }} />
+      <Stack.Screen name="SmartInsights" component={SmartInsightsScreen} options={{ title: 'AI Insights' }} />
+    </Stack.Navigator>
+  );
+}
+
 function AlertsStack() {
   const { theme } = useAppTheme();
-  const stackScreenOptions = {
-    headerStyle: { backgroundColor: theme.colors.backgroundAlt },
-    headerTintColor: theme.colors.textPrimary,
-    headerTitleStyle: { fontWeight: '800', fontSize: 17 },
-    headerShadowVisible: false,
-    headerBackTitleVisible: false,
-    headerBackTitle: '',
-    contentStyle: { backgroundColor: theme.colors.background },
-    animation: 'none',
-  };
+  const stackScreenOptions = createStackOptions(theme);
   return (
     <Stack.Navigator screenOptions={stackScreenOptions}>
       <Stack.Screen name="AlertsMain" component={AlertsScreen} options={{ title: 'Active Alerts' }} />
@@ -82,24 +89,33 @@ export default function BottomTabs() {
         headerShown: false,
         tabBarStyle: {
           position: 'absolute',
-          left: 14,
-          right: 14,
+          left: 16,
+          right: 16,
           bottom: 12,
           backgroundColor: theme.colors.card,
           borderTopColor: theme.colors.divider,
           borderTopWidth: 1,
           paddingBottom: 10,
-          paddingTop: 10,
-          height: 74,
+          paddingTop: 9,
+          height: 84,
           borderRadius: 24,
           ...theme.shadows.card,
+        },
+        tabBarItemStyle: {
+          minWidth: 0,
+          paddingHorizontal: 0,
         },
         tabBarActiveTintColor: theme.colors.blue,
         tabBarInactiveTintColor: theme.colors.textMuted,
         tabBarLabelStyle: {
-          fontSize: 11,
+          fontSize: 9,
+          lineHeight: 11,
           fontWeight: '700',
-          paddingBottom: 2,
+          paddingBottom: 1,
+          textAlign: 'center',
+        },
+        tabBarIconStyle: {
+          marginTop: 1,
         },
         sceneStyle: {
           backgroundColor: theme.colors.background,
@@ -109,6 +125,8 @@ export default function BottomTabs() {
 
           if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline';
+          } else if (route.name === 'System Health') {
+            iconName = focused ? 'pulse' : 'pulse-outline';
           } else if (route.name === 'Analytics') {
             iconName = focused ? 'pie-chart' : 'pie-chart-outline';
           } else if (route.name === 'Alerts') {
@@ -128,8 +146,13 @@ export default function BottomTabs() {
       })}
     >
       <Tab.Screen name="Home" component={HomeStack} />
-      <Tab.Screen name="Analytics" component={AnalyticsStack} />
+      <Tab.Screen
+        name="System Health"
+        component={SystemHealthStack}
+        options={{ tabBarLabel: 'System\nHealth' }}
+      />
       <Tab.Screen name="Alerts" component={AlertsStack} />
+      <Tab.Screen name="Analytics" component={AnalyticsStack} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>
   );

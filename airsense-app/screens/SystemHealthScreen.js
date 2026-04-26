@@ -7,7 +7,7 @@ import SensorStatusItem from '../components/SensorStatusItem';
 import Badge from '../components/Badge';
 import CardAccent from '../components/CardAccent';
 
-export default function SystemHealthScreen({ navigation }) {
+export default function SystemHealthScreen() {
   const { theme } = useAppTheme();
   const styles = createStyles(theme);
   const [data, setData] = useState(null);
@@ -73,7 +73,7 @@ export default function SystemHealthScreen({ navigation }) {
         </View>
       </View>
 
-      <SectionHeader title="Sensors" subtitle="Availability across the monitoring stack." actionTitle="Open Analytics" onActionPress={() => navigation.navigate('Analytics')} />
+      <SectionHeader title="Sensors" subtitle="Availability across the monitoring stack." />
       <View style={styles.card}>
         <CardAccent color={theme.colors.green} radius={theme.borderRadius.lg} />
         {data.sensors.map((sensor) => (

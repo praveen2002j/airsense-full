@@ -164,8 +164,8 @@ export default function ChatBot() {
 const createStyles = (theme) => StyleSheet.create({
   fab: {
     position: 'absolute',
-    bottom: 84,
-    right: 18,
+    bottom: 42,
+    right: 10,
     width: 62,
     height: 62,
     borderRadius: 31,
