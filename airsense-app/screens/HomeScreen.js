@@ -1,14 +1,23 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { theme } from '../styles/theme';
+import { useAppTheme } from '../styles/theme';
 import { getDashboardData } from '../services/api';
 import MetricCard from '../components/MetricCard';
 import SectionHeader from '../components/SectionHeader';
 import Icon from '@expo/vector-icons/Ionicons';
 import Badge from '../components/Badge';
+import CardAccent from '../components/CardAccent';
+
+const getStatusTone = (theme, status) => {
+  if (status === 'Critical') return theme.colors.red;
+  if (status === 'Warning' || status === 'Moderate') return theme.colors.yellow;
+  return theme.colors.green;
+};
 
 export default function HomeScreen({ navigation }) {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -61,139 +70,158 @@ export default function HomeScreen({ navigation }) {
     );
   }
 
+  const statusColor = getStatusTone(theme, data.overview.status);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView
         contentContainerStyle={styles.container}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={theme.colors.blue} />}
       >
-        {/* Header */}
-        <View style={styles.header}>
-          <View>
-            <Text style={styles.greeting}>Good Morning</Text>
-            <Text style={styles.appName}>AirSense</Text>
-          </View>
-          <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
-            <Icon name="notifications-outline" size={28} color={theme.colors.textPrimary} />
-          </TouchableOpacity>
-        </View>
-
-        {/* Main Status Card */}
-        <View style={styles.mainCard}>
-          <Text style={styles.mainCardTitle}>Air Quality Status</Text>
-          <View style={styles.mainCardRow}>
+        <View style={styles.hero}>
+          <View style={styles.heroGlow} />
+          <View style={styles.header}>
             <View>
-              <Text style={styles.mainCardValue}>{data.metrics.co2.value ?? '—'}</Text>
-              <Text style={styles.mainCardUnit}>CO₂ ppm</Text>
+              <Text style={styles.kicker}>Indoor air intelligence</Text>
+              <Text style={styles.appName}>AirSense Command Center</Text>
+              <Text style={styles.heroText}>
+                Monitor live conditions, surface risks quickly, and support faster decisions with data plus AI guidance.
+              </Text>
             </View>
-            <Badge label={data.overview.status} status={data.overview.status} />
+            <TouchableOpacity onPress={() => navigation.navigate('Notifications')} style={styles.headerAction}>
+              <Icon name="notifications-outline" size={22} color={theme.colors.textPrimary} />
+            </TouchableOpacity>
+          </View>
+
+        <View style={styles.statusPanel}>
+          <CardAccent color={statusColor} radius={theme.borderRadius.lg} />
+          <View style={styles.statusTop}>
+              <View>
+                <Text style={styles.statusLabel}>Current air quality</Text>
+                <Text style={styles.statusValue}>{data.metrics.co2.value ?? '—'}</Text>
+                <Text style={styles.statusUnit}>CO2 ppm</Text>
+              </View>
+              <Badge label={data.overview.status} status={data.overview.status} />
+            </View>
+
+            <View style={styles.scoreBand}>
+              <View style={styles.scoreCard}>
+                <Text style={styles.scoreTitle}>Air score</Text>
+                <Text style={styles.scoreValue}>{data.overview.score}%</Text>
+              </View>
+              <View style={styles.scoreDivider} />
+              <View style={styles.scoreCard}>
+                <Text style={styles.scoreTitle}>Occupancy</Text>
+                <Text style={styles.scoreValue}>{data.occupancy.value ?? '—'}</Text>
+              </View>
+            </View>
+
+            <View style={styles.storyStrip}>
+              <View style={[styles.storyAccent, { backgroundColor: statusColor }]} />
+              <Text style={styles.storyText}>
+                Decision support: prioritize ventilation when CO2 rises, review humidity comfort bands, and validate risk with alert history.
+              </Text>
+            </View>
           </View>
         </View>
 
-        {/* Live Readings */}
-        <SectionHeader title="Live Readings" />
+        <SectionHeader title="Live readings" subtitle="High-signal metrics for quick situational awareness." />
         <View style={styles.grid}>
           <View style={styles.row}>
-            <MetricCard title="CO₂ Level" value={data.metrics.co2.value} unit={data.metrics.co2.unit} iconName={data.metrics.co2.icon} color={theme.colors.yellow} />
+            <MetricCard title="CO2 level" value={data.metrics.co2.value} unit={data.metrics.co2.unit} iconName={data.metrics.co2.icon} color={theme.colors.yellow} />
             <MetricCard title="Temperature" value={data.metrics.temperature.value} unit={data.metrics.temperature.unit} iconName={data.metrics.temperature.icon} color={theme.colors.blue} />
           </View>
           <View style={styles.row}>
             <MetricCard title="Humidity" value={data.metrics.humidity.value} unit={data.metrics.humidity.unit} iconName={data.metrics.humidity.icon} color={theme.colors.green} />
-            <MetricCard title="Carbon Mon." value={data.metrics.co.value} unit={data.metrics.co.unit} iconName={data.metrics.co.icon} color={theme.colors.red} />
+            <MetricCard title="Carbon monoxide" value={data.metrics.co.value} unit={data.metrics.co.unit} iconName={data.metrics.co.icon} color={theme.colors.red} />
           </View>
         </View>
 
-        {/* Additional Cards */}
-        <SectionHeader title="System & Occupancy" />
-        <View style={styles.grid}>
-          <View style={styles.row}>
-            <MetricCard title="System Health" value={data.overview.score} unit="%" iconName="hardware-chip-outline" color={theme.colors.purple} />
-            <MetricCard title="Occupancy" value={data.occupancy.value ?? '—'} unit="people" iconName="people-outline" color={theme.colors.blue} />
+        <SectionHeader title="Decision snapshot" subtitle="Contextual indicators that support operational response." />
+        <View style={styles.snapshotCard}>
+          <CardAccent color={theme.colors.blue} radius={theme.borderRadius.lg} />
+          <View style={styles.snapshotItem}>
+            <Text style={styles.snapshotLabel}>System health</Text>
+            <Text style={styles.snapshotValue}>{data.overview.score}%</Text>
+          </View>
+          <View style={styles.snapshotDivider} />
+          <View style={styles.snapshotItem}>
+            <Text style={styles.snapshotLabel}>Status</Text>
+            <Text style={styles.snapshotValue}>{data.overview.status}</Text>
+          </View>
+          <View style={styles.snapshotDivider} />
+          <View style={styles.snapshotItem}>
+            <Text style={styles.snapshotLabel}>People detected</Text>
+            <Text style={styles.snapshotValue}>{data.occupancy.value ?? '—'}</Text>
           </View>
         </View>
-
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: theme.colors.background,
-  },
-  container: {
-    padding: theme.spacing.md,
-  },
-  centered: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  errorText: {
-    color: theme.colors.red,
-    fontSize: 16,
-    marginBottom: 12,
-  },
-  retryBtn: {
-    paddingHorizontal: 24,
-    paddingVertical: 10,
-    backgroundColor: theme.colors.blue,
-    borderRadius: theme.borderRadius.md,
-  },
-  retryText: {
-    color: '#fff',
-    fontWeight: '600',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: theme.spacing.lg,
-  },
-  greeting: {
-    color: theme.colors.textSecondary,
-    fontSize: 16,
-    marginBottom: 4,
-  },
-  appName: {
-    color: theme.colors.textPrimary,
-    fontSize: 28,
-    fontWeight: '800',
-  },
-  mainCard: {
-    backgroundColor: theme.colors.blue + '15',
-    padding: theme.spacing.lg,
+const createStyles = (theme) => StyleSheet.create({
+  safeArea: { flex: 1, backgroundColor: theme.colors.background },
+  container: { padding: theme.spacing.md, paddingBottom: theme.spacing.xxl + 96 },
+  centered: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  hero: {
+    backgroundColor: theme.colors.backgroundAlt,
     borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing.lg,
     borderWidth: 1,
-    borderColor: theme.colors.blue + '30',
+    borderColor: theme.colors.divider,
+    overflow: 'hidden',
+    ...theme.shadows.card,
   },
-  mainCardTitle: {
-    color: theme.colors.textSecondary,
-    fontSize: 14,
-    fontWeight: '600',
-    marginBottom: theme.spacing.md,
+  heroGlow: {
+    position: 'absolute',
+    top: -60,
+    right: -20,
+    width: 180,
+    height: 180,
+    borderRadius: 90,
+    backgroundColor: theme.colors.blue + '20',
   },
-  mainCardRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'baseline',
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: theme.spacing.md },
+  kicker: { color: theme.colors.cyan, fontSize: 12, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 10 },
+  appName: { color: theme.colors.textPrimary, fontSize: 30, fontWeight: '900', lineHeight: 34 },
+  heroText: { color: theme.colors.textSecondary, fontSize: 14, lineHeight: 21, marginTop: 10, maxWidth: 320 },
+  headerAction: {
+    width: 46, height: 46, borderRadius: 23, backgroundColor: theme.colors.surfaceAlt, borderWidth: 1,
+    borderColor: theme.colors.divider, justifyContent: 'center', alignItems: 'center',
   },
-  mainCardValue: {
-    color: theme.colors.textPrimary,
-    fontSize: 42,
-    fontWeight: '800',
+  statusPanel: {
+    marginTop: theme.spacing.lg, backgroundColor: theme.colors.surface, borderWidth: 1, borderColor: theme.colors.divider,
+    borderRadius: theme.borderRadius.lg, padding: theme.spacing.md, paddingLeft: theme.spacing.md + 8, ...theme.shadows.soft,
+    overflow: 'hidden',
   },
-  mainCardUnit: {
-    color: theme.colors.textSecondary,
-    fontSize: 16,
-    marginTop: 4,
+  statusTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: theme.spacing.md },
+  statusLabel: { color: theme.colors.textMuted, fontSize: 13, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.6 },
+  statusValue: { color: theme.colors.textPrimary, fontSize: 44, fontWeight: '900', marginTop: 8 },
+  statusUnit: { color: theme.colors.textSecondary, fontSize: 15, marginTop: 2 },
+  scoreBand: {
+    flexDirection: 'row', alignItems: 'center', backgroundColor: theme.colors.surfaceAlt, borderRadius: theme.borderRadius.lg,
+    paddingVertical: 14, paddingHorizontal: theme.spacing.md, marginTop: theme.spacing.md,
   },
-  grid: {
-    marginBottom: theme.spacing.md,
+  scoreCard: { flex: 1 },
+  scoreTitle: { color: theme.colors.textMuted, fontSize: 12, fontWeight: '700', marginBottom: 6 },
+  scoreValue: { color: theme.colors.textPrimary, fontSize: 24, fontWeight: '800' },
+  scoreDivider: { width: 1, height: 34, backgroundColor: theme.colors.divider, marginHorizontal: theme.spacing.md },
+  storyStrip: { marginTop: theme.spacing.md, flexDirection: 'row', alignItems: 'flex-start', gap: 10 },
+  storyAccent: { width: 4, borderRadius: theme.borderRadius.pill, alignSelf: 'stretch' },
+  storyText: { flex: 1, color: theme.colors.textSecondary, fontSize: 13, lineHeight: 20 },
+  errorText: { color: theme.colors.red, fontSize: 16, marginBottom: 12 },
+  retryBtn: { paddingHorizontal: 24, paddingVertical: 10, backgroundColor: theme.colors.blue, borderRadius: theme.borderRadius.pill },
+  retryText: { color: theme.colors.white, fontWeight: '700' },
+  grid: { marginBottom: theme.spacing.md },
+  row: { flexDirection: 'row', justifyContent: 'space-between' },
+  snapshotCard: {
+    backgroundColor: theme.colors.surface, borderRadius: theme.borderRadius.lg, borderWidth: 1, borderColor: theme.colors.divider,
+    paddingVertical: theme.spacing.md, paddingHorizontal: theme.spacing.md, paddingLeft: theme.spacing.md + 8, flexDirection: 'row', alignItems: 'center', ...theme.shadows.soft,
+    overflow: 'hidden',
   },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
+  snapshotItem: { flex: 1 },
+  snapshotLabel: { color: theme.colors.textMuted, fontSize: 12, fontWeight: '700', marginBottom: 6 },
+  snapshotValue: { color: theme.colors.textPrimary, fontSize: 18, fontWeight: '800' },
+  snapshotDivider: { width: 1, height: 38, backgroundColor: theme.colors.divider, marginHorizontal: theme.spacing.sm },
 });

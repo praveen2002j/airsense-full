@@ -1,50 +1,59 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { theme } from '../styles/theme';
+import { useAppTheme } from '../styles/theme';
 import Icon from '@expo/vector-icons/Ionicons';
+import CardAccent from './CardAccent';
 
 export default function InsightCard({ insight }) {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
   const { title, description, trend, iconName, type, actionLabel, onAction } = insight;
-  
+
   const isRecommendation = type === 'recommendation';
-  const color = isRecommendation ? theme.colors.blue : theme.colors.purple;
+  const color = isRecommendation ? theme.colors.cyan : theme.colors.purple;
 
   return (
     <View style={[styles.card, isRecommendation && styles.recommendationCard]}>
+      <CardAccent color={color} radius={theme.borderRadius.lg} />
       <View style={styles.header}>
         <View style={[styles.iconContainer, { backgroundColor: color + '20' }]}>
           <Icon name={iconName || 'bulb-outline'} size={20} color={color} />
         </View>
         <Text style={styles.title}>{title}</Text>
-        {trend && (
-          <Icon 
-            name={trend === 'up' ? 'trending-up' : trend === 'down' ? 'trending-down' : 'remove'} 
-            size={20} 
-            color={trend === 'up' ? theme.colors.red : theme.colors.green} 
+        {trend ? (
+          <Icon
+            name={trend === 'up' ? 'trending-up' : trend === 'down' ? 'trending-down' : 'remove'}
+            size={20}
+            color={trend === 'up' ? theme.colors.red : theme.colors.green}
           />
-        )}
+        ) : null}
       </View>
       <Text style={styles.description}>{description}</Text>
-      
-      {isRecommendation && actionLabel && (
+
+      {isRecommendation && actionLabel ? (
         <TouchableOpacity style={styles.actionButton} onPress={onAction}>
           <Text style={styles.actionText}>{actionLabel}</Text>
         </TouchableOpacity>
-      )}
+      ) : null}
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   card: {
     backgroundColor: theme.colors.card,
     borderRadius: theme.borderRadius.lg,
     padding: theme.spacing.md,
+    paddingLeft: theme.spacing.md + 8,
     marginBottom: theme.spacing.md,
+    borderWidth: 1,
+    borderColor: theme.colors.divider,
+    ...theme.shadows.soft,
+    overflow: 'hidden',
   },
   recommendationCard: {
-    borderWidth: 1,
-    borderColor: theme.colors.blue + '40',
+    borderColor: theme.colors.cyan + '55',
+    backgroundColor: theme.colors.surface,
   },
   header: {
     flexDirection: 'row',
@@ -61,7 +70,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '700',
     color: theme.colors.textPrimary,
     flex: 1,
   },
@@ -69,20 +78,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: theme.colors.textSecondary,
     lineHeight: 20,
-    marginLeft: 44, 
+    marginLeft: 44,
   },
   actionButton: {
     marginTop: theme.spacing.md,
     marginLeft: 44,
-    backgroundColor: theme.colors.blue + '20',
+    backgroundColor: theme.colors.cyan + '20',
     paddingVertical: 8,
     paddingHorizontal: 16,
-    borderRadius: theme.borderRadius.md,
+    borderRadius: theme.borderRadius.pill,
     alignSelf: 'flex-start',
   },
   actionText: {
-    color: theme.colors.blue,
-    fontWeight: '600',
-    fontSize: 14,
+    color: theme.colors.cyan,
+    fontWeight: '700',
+    fontSize: 13,
   },
 });
