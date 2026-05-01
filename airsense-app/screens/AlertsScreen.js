@@ -58,7 +58,7 @@ export default function AlertsScreen({ navigation }) {
         </View>
       </View>
 
-      <SectionHeader title="Active alerts" subtitle="Ordered for clear review and rapid response." actionTitle="History" onActionPress={() => navigation.navigate('AlertHistory')} />
+      {/* <SectionHeader title="Active alerts" subtitle="Ordered for clear review and rapid response." actionTitle="History" onActionPress={() => navigation.navigate('AlertHistory')} /> */}
 
       {alerts.length === 0 ? (
         <View style={styles.emptyContainer}>
