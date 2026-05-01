@@ -85,7 +85,7 @@ export default function HomeScreen({ navigation }) {
               <Text style={styles.kicker}>Indoor air intelligence</Text>
               <Text style={styles.appName}>AirSense Command Center</Text>
               <Text style={styles.heroText}>
-                Monitor live conditions, surface risks quickly, and support faster decisions with data plus AI guidance.
+                Monitor live conditions,surface risks quickly, and support faster decisions with data plus AI guidance.
               </Text>
             </View>
             <TouchableOpacity onPress={() => navigation.navigate('Notifications')} style={styles.headerAction}>
