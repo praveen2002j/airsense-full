@@ -1,0 +1,47 @@
+{
+  "generatedAt": "2026-05-01T11:11:20.272607+00:00",
+  "model": "Autoregressive LinearRegression",
+  "target": "next co2",
+  "features": [
+    "co2",
+    "co2_lag_1",
+    "co2_lag_2",
+    "co2_lag_3",
+    "co2_lag_6",
+    "co2_lag_12",
+    "co2_roll_3",
+    "co2_roll_6",
+    "co2_roll_12"
+  ],
+  "rowsUsed": 3726,
+  "trainRows": 2980,
+  "testRows": 746,
+  "dateRange": {
+    "from": "2026-03-21T17:52:46",
+    "to": "2026-05-01T11:10:34"
+  },
+  "parameters": {
+    "estimator": "LinearRegression",
+    "current_features": [
+      "co2"
+    ],
+    "lags": [
+      1,
+      2,
+      3,
+      6,
+      12
+    ],
+    "rolling_windows": [
+      3,
+      6,
+      12
+    ],
+    "split": "chronological 80/20"
+  },
+  "metrics": {
+    "rmse": 16.309983643982772,
+    "mae": 11.40211379970834,
+    "r2": 0.9671141786003394
+  }
+}
