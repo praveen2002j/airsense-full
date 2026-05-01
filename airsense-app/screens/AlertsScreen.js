@@ -5,6 +5,7 @@ import { getActiveAlerts } from '../services/api';
 import AlertCard from '../components/AlertCard';
 import SectionHeader from '../components/SectionHeader';
 import CardAccent from '../components/CardAccent';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function AlertsScreen({ navigation }) {
   const { theme } = useAppTheme();
@@ -58,11 +59,14 @@ export default function AlertsScreen({ navigation }) {
         </View>
       </View>
 
-      {/* <SectionHeader title="Active alerts" subtitle="Ordered for clear review and rapid response." actionTitle="History" onActionPress={() => navigation.navigate('AlertHistory')} /> */}
+      <SectionHeader title="Active alerts" subtitle="Ordered for clear review and rapid response." actionTitle="History" onActionPress={() => navigation.navigate('AlertHistory')} />
 
       {alerts.length === 0 ? (
         <View style={styles.emptyContainer}>
           <CardAccent color={theme.colors.green} radius={theme.borderRadius.lg} />
+          <View style={[styles.emptyIconContainer, { backgroundColor: theme.colors.green + '1A' }]}>
+            <Ionicons name="checkmark-circle" size={32} color={theme.colors.green} />
+          </View>
           <Text style={styles.emptyTitle}>No active alerts</Text>
           <Text style={styles.emptyText}>Current readings are within expected thresholds.</Text>
         </View>
@@ -133,6 +137,14 @@ const createStyles = (theme) => StyleSheet.create({
     borderColor: theme.colors.divider,
     ...theme.shadows.soft,
     overflow: 'hidden',
+  },
+  emptyIconContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
   },
   emptyTitle: { color: theme.colors.textPrimary, fontSize: 18, fontWeight: '800', marginBottom: 8 },
   emptyText: { color: theme.colors.textSecondary, fontSize: 14 },
