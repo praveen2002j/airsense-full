@@ -112,8 +112,10 @@ export default function AlertHistoryScreen() {
 
 function StatCard({ theme, label, value, tone }) {
   const styles = createStyles(theme);
+  const bgColor = tone ? tone + '10' : theme.colors.blue + '10'; // 10 is hex for roughly 6% opacity
+  
   return (
-    <View style={styles.statsCard}>
+    <View style={[styles.statsCard, { backgroundColor: bgColor }]}>
       <CardAccent color={tone || theme.colors.blue} radius={theme.borderRadius.lg} />
       <Text style={styles.statsLabel}>{label}</Text>
       <Text style={[styles.statsVal, tone ? { color: tone } : null]}>{value}</Text>
