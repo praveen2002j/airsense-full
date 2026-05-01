@@ -128,7 +128,7 @@ export default function AnalyticsScreen({ navigation }) {
         <Text style={styles.heroKicker}>Visual analytics dashboard</Text>
         <Text style={styles.heroTitle}>From raw readings to analytical reasoning</Text>
         <Text style={styles.heroText}>
-          Explore trends, compare ranges, inspect anomalies, and move from monitoring to decision support without leaving the dashboard.
+          Explore trends, compare ranges, inspect anomalies,and move from monitoring to decision support without leaving the dashboard.
         </Text>
 
         <View style={styles.toolbar}>
